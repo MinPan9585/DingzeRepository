@@ -4,15 +4,33 @@ using UnityEngine;
 
 public class Square : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Color squareColor;
+    bool isFilled = false;
 
-    // Update is called once per frame
-    void Update()
+    private void OnMouseEnter()
     {
+        if (!isFilled)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().color = Color.gray;
+        }
+    }
+    private void OnMouseExit()
+    {
+        if (!isFilled)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+        }
+            
+    }
+    private void OnMouseDown()
+    {
+        squareColor = ColorManager.instance.selectedColor;
+        if (squareColor != Color.white)
+        {
+            isFilled = true;
+
+            this.gameObject.GetComponent<SpriteRenderer>().color = squareColor;
+        }
         
     }
 }
