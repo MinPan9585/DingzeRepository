@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +10,9 @@ public class MouseManager : MonoBehaviour
     private float mainTime;
     public GameObject[] pixelObjects;
     private GameObject closestObj;
+
+    private bool mouseDown = false;
+    public Material drawMat;
 
     //public Vector3[] pixelScreenPos;
     //public List<Vector3> pixelScreenPositions = new List<Vector3>();
@@ -35,6 +38,7 @@ public class MouseManager : MonoBehaviour
             }
             if(Time.time - mainTime > 0.2f)
             {
+                mouseDown = true;
                 mouseCurrentPos = Input.mousePosition;
             }
         }
@@ -61,7 +65,7 @@ public class MouseManager : MonoBehaviour
                 {
                     closestObj.GetComponent<SpriteRenderer>().color = ColorManager.instance.selectedColor;
                 }
-                
+                mouseDown = false;
                 mainTime = 0;
             }
             else
@@ -85,9 +89,66 @@ public class MouseManager : MonoBehaviour
                     }
 
                 }
-                
+                mouseDown = false;
                 mainTime = 0;
             }
         }
     }
+
+    void OnGUI()
+    {
+        if (mouseDown)
+        {
+            Draw();
+        }
+    }
+    void Draw()
+    {
+        drawMat.SetPass(0);
+        GL.PushMatrix();//保存摄像机变换矩阵  
+        GL.LoadPixelMatrix();//设置用屏幕坐标绘图  
+                             //透明框  
+        Color clr = new Color (1f, 0.1f, 0.1f, 0.5f);
+
+        GL.Begin(GL.LINES);
+        GL.Color(clr);
+        GL.Vertex3(mouseStartPos.x, mouseStartPos.y, 0);
+        GL.Vertex3(mouseCurrentPos.x, mouseStartPos.y, 0);
+        GL.End();
+
+        //下  
+        GL.Begin(GL.LINES);
+        GL.Color(clr);
+        GL.Vertex3(mouseStartPos.x, mouseCurrentPos.y, 0);
+        GL.Vertex3(mouseCurrentPos.x, mouseCurrentPos.y, 0);
+        GL.End();
+
+        //左  
+        GL.Begin(GL.LINES);
+        GL.Color(clr);
+        GL.Vertex3(mouseStartPos.x, mouseStartPos.y, 0);
+        GL.Vertex3(mouseStartPos.x, mouseCurrentPos.y, 0);
+        GL.End();
+
+        //右  
+        GL.Begin(GL.LINES);
+        GL.Color(clr);
+        GL.Vertex3(mouseCurrentPos.x, mouseStartPos.y, 0);
+        GL.Vertex3(mouseCurrentPos.x, mouseCurrentPos.y, 0);
+        GL.End();
+
+        GL.Begin(GL.LINES);
+        GL.Color(clr);
+        GL.Vertex3(mouseCurrentPos.x+1, mouseStartPos.y, 0);
+        GL.Vertex3(mouseCurrentPos.x+1, mouseCurrentPos.y, 0);
+        GL.End();
+        GL.Begin(GL.LINES);
+        GL.Color(clr);
+        GL.Vertex3(mouseCurrentPos.x + 2, mouseStartPos.y, 0);
+        GL.Vertex3(mouseCurrentPos.x + 2, mouseCurrentPos.y, 0);
+        GL.End();
+
+        GL.PopMatrix();//还原  
+    }
+
 }
