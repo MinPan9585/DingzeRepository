@@ -17,6 +17,8 @@ public class MouseManager : MonoBehaviour
     //public Vector3[] pixelScreenPos;
     //public List<Vector3> pixelScreenPositions = new List<Vector3>();
 
+    public GameManager gameManager;
+
     void Start()
     {
         pixelObjects = GameObject.FindGameObjectsWithTag("Pixel");
@@ -67,6 +69,8 @@ public class MouseManager : MonoBehaviour
                 }
                 mouseDown = false;
                 mainTime = 0;
+                if(ColorManager.instance.selectedColor!= Color.white)
+                    gameManager.strokesNum++;
             }
             else
             {
@@ -91,6 +95,8 @@ public class MouseManager : MonoBehaviour
                 }
                 mouseDown = false;
                 mainTime = 0;
+                if (ColorManager.instance.selectedColor != Color.white)
+                    gameManager.strokesNum++;
             }
         }
     }
