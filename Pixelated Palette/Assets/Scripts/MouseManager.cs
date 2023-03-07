@@ -6,6 +6,8 @@ public class MouseManager : MonoBehaviour
 {
     private Vector3 mouseStartPos;
     private Vector3 mouseCurrentPos;
+    private Vector3 selectionBoxStart;
+    private Vector3 selectionBoxEnd;
     //private Vector3 mouseEndPos;
     private float mainTime;
     public GameObject[] pixelObjects;
@@ -31,72 +33,44 @@ public class MouseManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0))
         {
-            if(mainTime == 0.0f)
-            {
-                mouseStartPos = Input.mousePosition;
-                mainTime = Time.time;
-            }
-            if(Time.time - mainTime > 0.2f)
-            {
-                mouseDown = true;
-                mouseCurrentPos = Input.mousePosition;
-            }
+            // Record the start position of the selection box.
+            mouseDown = true;
+            selectionBoxStart = Input.mousePosition;
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            if (Time.time - mainTime < 0.2f)
-            {
-                float shortesetDis = 10000f;
-                
-                for (int i = 0; i < pixelObjects.Length; i++)
-                {
-                    float dis = Vector3.Distance(Camera.main.WorldToScreenPoint(pixelObjects[i].transform.position), mouseStartPos);
-                    
-                    if(dis < shortesetDis)
-                    {
-                        shortesetDis = dis;
+            mouseDown = false;
+            // Record the end position of the selection box.
+            selectionBoxEnd = Input.mousePosition;
 
-                        closestObj = pixelObjects[i];
-                    }
-                }
-                Debug.Log(shortesetDis);
-                if (shortesetDis<=13.5f)
+            // Determine the left, right, bottom, and top positions of the selection box.
+            float percentage = 0.008f;
+            float screenPercentageX = Screen.width * percentage;
+            float screenPercentageY = Screen.height * percentage;
+            float left = Mathf.Min(selectionBoxStart.x, selectionBoxEnd.x) - screenPercentageX;
+            float right = Mathf.Max(selectionBoxStart.x, selectionBoxEnd.x) + screenPercentageX;
+            float bottom = Mathf.Min(selectionBoxStart.y, selectionBoxEnd.y) - screenPercentageY;
+            float top = Mathf.Max(selectionBoxStart.y, selectionBoxEnd.y) + screenPercentageY;
+
+            // Iterate over all the game objects and check if their position is within the selection box.
+            for (int i = 0; i < pixelObjects.Length; i++)
+            {
+                Vector3 objScreenPos = Camera.main.WorldToScreenPoint(pixelObjects[i].transform.position);
+
+                if (objScreenPos.x >= left && objScreenPos.x <= right && objScreenPos.y >= bottom && objScreenPos.y <= top)
                 {
-                    closestObj.GetComponent<SpriteRenderer>().color = ColorManager.instance.selectedColor;
+                    // The game object is within the selection box, so set its color to the selected color.
+                    pixelObjects[i].GetComponent<SpriteRenderer>().color = ColorManager.instance.selectedColor;
                 }
-                mouseDown = false;
-                mainTime = 0;
-                if(ColorManager.instance.selectedColor!= Color.white)
-                    gameManager.strokesNum++;
             }
-            else
+
+            // Increment the number of strokes if the selected color is not white.
+            if (ColorManager.instance.selectedColor != Color.white)
             {
-                
-                for (int i = 0; i < pixelObjects.Length; i++)
-                {
-                    Vector2 po = Camera.main.WorldToScreenPoint(pixelObjects[i].transform.position);
-                    Vector2 ms = mouseStartPos;
-                    Vector2 mc = mouseCurrentPos;
-
-                    if ((po.x > ms.x && po.x < mc.x && po.y > ms.y && po.y < mc.y) ||
-                    (po.x > ms.x && po.x < mc.x && po.y < ms.y && po.y > mc.y) ||
-                    (po.x < ms.x && po.x > mc.x && po.y > ms.y && po.y < mc.y) ||
-                    (po.x < ms.x && po.x > mc.x && po.y < ms.y && po.y > mc.y))
-                    {
-                        //Debug.Log(mouseStartPos);
-                        //Debug.Log(mouseCurrentPos);
-                        //Debug.Log(pixelObjects[i].name);
-                        pixelObjects[i].GetComponent<SpriteRenderer>().color = ColorManager.instance.selectedColor;
-                    }
-
-                }
-                mouseDown = false;
-                mainTime = 0;
-                if (ColorManager.instance.selectedColor != Color.white)
-                    gameManager.strokesNum++;
+                gameManager.strokesNum++;
             }
         }
     }
