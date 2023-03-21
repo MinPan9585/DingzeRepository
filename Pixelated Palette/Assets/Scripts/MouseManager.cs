@@ -8,7 +8,6 @@ public class MouseManager : MonoBehaviour
     private Vector3 mouseCurrentPos;
     private Vector3 selectionBoxStart;
     private Vector3 selectionBoxEnd;
-    //private Vector3 mouseEndPos;
     private float mainTime;
     public GameObject[] pixelObjects;
     private GameObject closestObj;
@@ -16,19 +15,11 @@ public class MouseManager : MonoBehaviour
     private bool mouseDown = false;
     public Material drawMat;
 
-    //public Vector3[] pixelScreenPos;
-    //public List<Vector3> pixelScreenPositions = new List<Vector3>();
-
     public GameManager gameManager;
 
     void Start()
     {
         pixelObjects = GameObject.FindGameObjectsWithTag("Pixel");
-        //for (int i = 0; i < pixelObjects.Length; i++)
-        //{
-        //    Vector3 pixelScreenPos = Camera.main.WorldToScreenPoint(pixelObjects[i].transform.position);
-        //    pixelScreenPositions.Add(pixelScreenPos);
-        //}
     }
 
     void Update()
@@ -39,6 +30,11 @@ public class MouseManager : MonoBehaviour
             mouseDown = true;
             selectionBoxStart = Input.mousePosition;
         }
+
+        //if(Input.GetMouseButton(0)){
+        //    mouseDown = true;
+        //    mouseCurrentPos = Input.mousePosition;
+        //}
 
         if (Input.GetMouseButtonUp(0))
         {

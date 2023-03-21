@@ -10,11 +10,6 @@ public class GameManager : MonoBehaviour
     public TMP_Text timerText;
     public TMP_Text strokesText;
 
-    void Start()
-    {
-
-    }
-
     void Update()
     {
         gameTimer -= Time.deltaTime;
