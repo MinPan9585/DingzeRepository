@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class MouseManager : MonoBehaviour
 {
-    private Vector3 mouseStartPos;
     private Vector3 mouseCurrentPos;
     private Vector3 selectionBoxStart;
     private Vector3 selectionBoxEnd;
@@ -31,10 +30,11 @@ public class MouseManager : MonoBehaviour
             selectionBoxStart = Input.mousePosition;
         }
 
-        //if(Input.GetMouseButton(0)){
-        //    mouseDown = true;
-        //    mouseCurrentPos = Input.mousePosition;
-        //}
+        if (Input.GetMouseButton(0))
+        {
+            mouseDown = true;
+            mouseCurrentPos = Input.mousePosition;
+        }
 
         if (Input.GetMouseButtonUp(0))
         {
@@ -88,39 +88,39 @@ public class MouseManager : MonoBehaviour
 
         GL.Begin(GL.LINES);
         GL.Color(clr);
-        GL.Vertex3(mouseStartPos.x, mouseStartPos.y, 0);
-        GL.Vertex3(mouseCurrentPos.x, mouseStartPos.y, 0);
+        GL.Vertex3(selectionBoxStart.x, selectionBoxStart.y, 0);
+        GL.Vertex3(mouseCurrentPos.x, selectionBoxStart.y, 0);
         GL.End();
 
         //下  
         GL.Begin(GL.LINES);
         GL.Color(clr);
-        GL.Vertex3(mouseStartPos.x, mouseCurrentPos.y, 0);
+        GL.Vertex3(selectionBoxStart.x, mouseCurrentPos.y, 0);
         GL.Vertex3(mouseCurrentPos.x, mouseCurrentPos.y, 0);
         GL.End();
 
         //左  
         GL.Begin(GL.LINES);
         GL.Color(clr);
-        GL.Vertex3(mouseStartPos.x, mouseStartPos.y, 0);
-        GL.Vertex3(mouseStartPos.x, mouseCurrentPos.y, 0);
+        GL.Vertex3(selectionBoxStart.x, selectionBoxStart.y, 0);
+        GL.Vertex3(selectionBoxStart.x, mouseCurrentPos.y, 0);
         GL.End();
 
         //右  
         GL.Begin(GL.LINES);
         GL.Color(clr);
-        GL.Vertex3(mouseCurrentPos.x, mouseStartPos.y, 0);
+        GL.Vertex3(mouseCurrentPos.x, selectionBoxStart.y, 0);
         GL.Vertex3(mouseCurrentPos.x, mouseCurrentPos.y, 0);
         GL.End();
 
         GL.Begin(GL.LINES);
         GL.Color(clr);
-        GL.Vertex3(mouseCurrentPos.x+1, mouseStartPos.y, 0);
+        GL.Vertex3(mouseCurrentPos.x+1, selectionBoxStart.y, 0);
         GL.Vertex3(mouseCurrentPos.x+1, mouseCurrentPos.y, 0);
         GL.End();
         GL.Begin(GL.LINES);
         GL.Color(clr);
-        GL.Vertex3(mouseCurrentPos.x + 2, mouseStartPos.y, 0);
+        GL.Vertex3(mouseCurrentPos.x + 2, selectionBoxStart.y, 0);
         GL.Vertex3(mouseCurrentPos.x + 2, mouseCurrentPos.y, 0);
         GL.End();
 
