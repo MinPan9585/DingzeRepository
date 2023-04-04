@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,6 +11,8 @@ public class GameManager : MonoBehaviour
     public float gameTimer;
     public TMP_Text timerText;
     public TMP_Text strokesText;
+    public GameObject winPanel;
+    public int sceneIndex = 0;
 
     void Update()
     {
@@ -27,9 +31,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void EndGame()
+    public void EndGame()
     {
-        
+        winPanel.SetActive(true);
+
+        Invoke("NextLevel", 3f);
+    }
+
+    public void NextLevel()
+    {
+        sceneIndex++;
+        if (sceneIndex >= 3)
+        {
+            return;
+        }
+        SceneManager.LoadScene(sceneIndex);
     }
 
     void Fail()
